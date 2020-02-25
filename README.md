@@ -4,6 +4,10 @@ A cache object that deletes the least-recently-used items.
 
 [![Build Status](https://travis-ci.org/isaacs/node-lru-cache.svg?branch=master)](https://travis-ci.org/isaacs/node-lru-cache) [![Coverage Status](https://coveralls.io/repos/isaacs/node-lru-cache/badge.svg?service=github)](https://coveralls.io/github/isaacs/node-lru-cache)
 
+LRU 指的是当 Cache 存满时，再新增内容时会依次把最久没有使用到的缓存清除掉，直到空出的空间能放入新的内容为止。简称**最久未使用替换法**。
+
+所以，永远不用担心 Cache 终不能存东西，满了会自动清除。
+
 ## Installation:
 
 ```javascript
@@ -24,6 +28,7 @@ var LRU = require("lru-cache")
 cache.set("key", "value")
 cache.get("key") // "value"
 
+// 缓存的 key 不只是字符串，还可以是对象，取的时候也得用同一个对象取
 // non-string keys ARE fully supported
 // but note that it must be THE SAME object, not
 // just a JSON-equivalent object.
@@ -36,6 +41,7 @@ assert.equal(cache.get(someObject), 'a value')
 // because it's a different object identity
 assert.equal(cache.get({ a: 1 }), undefined)
 
+// 清空缓存
 cache.reset()    // empty the cache
 ```
 
@@ -43,6 +49,8 @@ If you put more stuff in it, then items will fall out.
 
 If you try to put an oversized thing in it, then it'll fall out right
 away.
+
+如果往缓存中放入小于缓存大小的内容，那么其他内容会被清除，如果往缓存中放入大雨缓存大小的内容，那么这个内容不会被放进去，里面的内容也不会被清除。
 
 ## Options
 
